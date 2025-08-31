@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputText = document.getElementById('inputText');
     const statusMessage = document.getElementById('statusMessage');
 
-    processButton.addEventListener('click', () => {
+    processButton.addEventListener('click', async () => {
         const text = inputText.value.trim();
 
         if (text === '') {
@@ -15,10 +15,36 @@ document.addEventListener('DOMContentLoaded', () => {
         statusMessage.textContent = '処理中です...';
         statusMessage.style.color = '#666';
 
-        // 開発者向け: 実際の通信がないため、数秒後に完了メッセージを表示
-        setTimeout(() => {
-            statusMessage.textContent = 'PDF作成リクエストを送信しました！';
-            statusMessage.style.color = 'green';
-        }, 2000);
+        try {
+            const response = await fetch('/create-pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: text })
+            });
+
+            if (response.ok) {
+                // PDFをダウンロード
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'kanji_list.pdf'; // ダウンロード時のファイル名
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                statusMessage.textContent = 'PDFが正常に作成されました。';
+                statusMessage.style.color = 'green';
+            } else {
+                const error = await response.json();
+                statusMessage.textContent = `エラー: ${error.message || response.statusText}`;
+                statusMessage.style.color = 'red';
+            }
+        } catch (error) {
+            statusMessage.textContent = 'サーバーとの通信に失敗しました。';
+            statusMessage.style.color = 'red';
+        }
     });
 });
