@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章漢字変換サイト</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>文章漢字変換サイト</h1>
+    </header>
+
+    <main>
+        <div class="container">
+            <p>PDFにしたい文章を入力してください。漢字とその読み方を抽出してリストを作成します。</p>
+            <textarea id="inputText" placeholder="ここに入力してください..." rows="10"></textarea>
+            <button id="processButton">PDFを作成</button>
+
+            <div id="statusMessage"></div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 文章漢字変換サイト</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
