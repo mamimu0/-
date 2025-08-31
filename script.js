@@ -25,12 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                // PDFをダウンロード
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'kanji_list.pdf'; // ダウンロード時のファイル名
+                a.download = 'kanji_list.pdf';
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
@@ -39,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusMessage.style.color = 'green';
             } else {
                 const error = await response.json();
-                statusMessage.textContent = `エラー: ${error.message || response.statusText}`;
+                statusMessage.textContent = `エラー: ${error.error || response.statusText}`;
                 statusMessage.style.color = 'red';
             }
         } catch (error) {

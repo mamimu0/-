@@ -18,9 +18,7 @@ def get_kanji_with_reading(text):
         surface = token.surface
         reading = token.reading
 
-        # 漢字で、かつ読み方がある場合に辞書に追加
         if re.search(r'[\u4e00-\u9faf]', surface) and reading:
-            # 読み方をカタカナからひらがなに変換
             hiragana_reading = "".join([chr(ord(c) - ord('ァ') + ord('ぁ')) if 'ァ' <= c <= 'ヶ' else c for c in reading])
             kanji_readings[surface] = hiragana_reading
 
@@ -29,12 +27,11 @@ def get_kanji_with_reading(text):
 def create_kanji_pdf(kanji_readings):
     """
     抽出した漢字と読み方をPDFファイルとして出力する関数。
-    ファイル名を自動で生成する。
+    ファイル名を自動で生成し、そのファイル名を返す。
     """
     number = 0
     output_filename = f"kanji_list_{number:02d}.pdf"
-    
-    # 既存のファイル名を確認し、存在する場合は新しい番号を割り当てる
+
     while os.path.exists(output_filename):
         number += 1
         output_filename = f"kanji_list_{number:02d}.pdf"
@@ -43,7 +40,7 @@ def create_kanji_pdf(kanji_readings):
         pdfmetrics.registerFont(UnicodeCIDFont('HeiseiMin-W3'))
     except KeyError:
         print("HeiseiMin-W3フォントが見つかりません。ReportLabを適切に設定しているか確認してください。")
-        return
+        return None
 
     c = canvas.Canvas(output_filename, pagesize=A4)
     c.setFont('HeiseiMin-W3', 12)
@@ -51,7 +48,7 @@ def create_kanji_pdf(kanji_readings):
     c.drawString(2.5*cm, 27*cm, f"漢字と読み方リスト - {number:02d}")
 
     y_position = 26*cm
-    
+
     for kanji, reading in kanji_readings.items():
         if y_position < 2*cm:
             c.showPage()
@@ -64,38 +61,4 @@ def create_kanji_pdf(kanji_readings):
 
     c.save()
     print(f"PDFファイル '{output_filename}' が正常に生成されました。")
-
-def main():
-    """
-    メイン関数
-    """
-    while True:
-        print("\n--- 漢字抽出プログラム ---")
-        print("処理したい文章を入力してください。（終了する場合は 'exit' と入力）")
-        
-        input_text = ""
-        while True:
-            line = input()
-            if line.strip().lower() == 'exit':
-                print("プログラムを終了します。")
-                return
-            if not line:
-                break
-            input_text += line + "\n"
-
-        if not input_text.strip():
-            print("入力がありませんでした。もう一度お試しください。")
-            continue
-
-        kanji_readings = get_kanji_with_reading(input_text)
-        
-        if not kanji_readings:
-            print("漢字は見つかりませんでした。PDFは生成されません。")
-        else:
-            print("\n--- 抽出された漢字と読み方 ---")
-            for kanji, reading in kanji_readings.items():
-                print(f"{kanji} / {reading}")
-            create_kanji_pdf(kanji_readings)
-
-if __name__ == "__main__":
-    main()
+    return output_filename
