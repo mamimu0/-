@@ -61,4 +61,39 @@ def create_kanji_pdf(kanji_readings):
 
     c.save()
     print(f"PDFファイル '{output_filename}' が正常に生成されました。")
-    return output_filename
+    return output_filename # この行が重要です！
+
+def main():
+    """
+    メイン関数
+    """
+    while True:
+        print("\n--- 漢字抽出プログラム ---")
+        print("処理したい文章を入力してください。（終了する場合は 'exit' と入力）")
+        
+        input_text = ""
+        while True:
+            line = input()
+            if line.strip().lower() == 'exit':
+                print("プログラムを終了します。")
+                return
+            if not line:
+                break
+            input_text += line + "\n"
+
+        if not input_text.strip():
+            print("入力がありませんでした。もう一度お試しください。")
+            continue
+
+        kanji_readings = get_kanji_with_reading(input_text)
+        
+        if not kanji_readings:
+            print("漢字は見つかりませんでした。PDFは生成されません。")
+        else:
+            print("\n--- 抽出された漢字と読み方 ---")
+            for kanji, reading in kanji_readings.items():
+                print(f"{kanji} / {reading}")
+            create_kanji_pdf(kanji_readings)
+
+if __name__ == "__main__":
+    main()
