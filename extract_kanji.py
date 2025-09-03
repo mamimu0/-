@@ -31,7 +31,7 @@ def create_kanji_pdf(kanji_readings):
     """
     number = 0
     output_filename = f"kanji_list_{number:02d}.pdf"
-
+    
     while os.path.exists(output_filename):
         number += 1
         output_filename = f"kanji_list_{number:02d}.pdf"
@@ -48,7 +48,7 @@ def create_kanji_pdf(kanji_readings):
     c.drawString(2.5*cm, 27*cm, f"漢字と読み方リスト - {number:02d}")
 
     y_position = 26*cm
-
+    
     for kanji, reading in kanji_readings.items():
         if y_position < 2*cm:
             c.showPage()
@@ -61,4 +61,4 @@ def create_kanji_pdf(kanji_readings):
 
     c.save()
     print(f"PDFファイル '{output_filename}' が正常に生成されました。")
-    return output_filename # PDFファイル名を返すように修正
+    return output_filename
