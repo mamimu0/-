@@ -61,4 +61,4 @@ def create_kanji_pdf(kanji_readings):
 
     c.save()
     print(f"PDFファイル '{output_filename}' が正常に生成されました。")
-    return output_filename
+    return output_filename # PDFファイル名を返すように修正
